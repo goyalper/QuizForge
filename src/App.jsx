@@ -361,14 +361,38 @@ function FeedbackPage() {
 
 function DonationPage({toast}) {
   const upiId = '7297010496-1@okbizaxis'
-  const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent('Vasu Goyal')}&cu=INR`
+  const paymentReference = useRef(`QF${Date.now()}${Math.random().toString(36).slice(2, 8)}`).current
+  const paymentParams = new URLSearchParams({pa: upiId, pn: 'Vasu Goyal', tr: paymentReference, tn: 'QuizForge support', cu: 'INR'}).toString()
+  const upiLink = `upi://pay?${paymentParams}`
+  const androidIntentLink = `intent://pay?${paymentParams}#Intent;scheme=upi;action=android.intent.action.VIEW;end`
+  const googlePayLink = `gpay://upi/pay?${paymentParams}`
+  const phonePeLink = `intent://pay?${paymentParams}#Intent;scheme=upi;package=com.phonepe.app;end`
+  const paytmLink = `intent://pay?${paymentParams}#Intent;scheme=upi;package=net.one97.paytm;end`
+  const primaryPaymentLink = /Android/i.test(navigator.userAgent) ? androidIntentLink : upiLink
+  const [copied, setCopied] = useState(false)
   function openPayment(event) {
     if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       event.preventDefault()
-      toast('Open Pay now on a phone with a UPI app, or scan the QR code.')
+      toast('UPI payments open from a phone. On desktop, scan the QR code instead.')
     }
   }
-  return <div className="donation-page"><PageTitle eyebrow="SUPPORT QUIZFORGE" title="Help keep learning simple." description="QuizForge is free to use. If it helps your practice, an optional donation supports its maintenance and future improvements." action={<a className="btn btn-primary" href={upiLink} onClick={openPayment}><Heart size={16} fill="currentColor"/> Pay now</a>}/><section className="donation-layout"><section className="donation-copy"><div className="donation-intro"><div className="donation-icon"><Heart size={22} fill="currentColor"/></div><div><h2>Support the project</h2><p>Every contribution helps keep QuizForge lightweight, privacy-first, and useful for learners.</p></div></div><div className="donation-points"><div><b>Free and local-first</b><span>No subscription or account is required to practice.</span></div><div><b>Small contributions matter</b><span>Your support helps with hosting, maintenance, and improvements.</span></div><div><b>Use any UPI app</b><span>Scan the QR code or tap Pay now on a mobile device.</span></div></div><div className="donation-actions"><a className="btn btn-primary pay-now-button" href={upiLink} onClick={openPayment}><Heart size={16} fill="currentColor"/> Pay now</a></div><p className="donation-note">On a phone, Pay now opens the installed UPI app chooser. On a computer, scan the QR code instead.</p></section><aside className="panel donation-card"><div className="donation-card-head"><div><h3>Scan &amp; pay</h3><p>Use Google Pay, Paytm, PhonePe, or another UPI app.</p></div><span className="donation-badge"><Heart size={13} fill="currentColor"/></span></div><div className="donation-qr-wrap"><div className="donation-qr-crop"><img src={`${import.meta.env.BASE_URL}donation-qr.png`} alt="UPI QR code for supporting QuizForge" loading="lazy" decoding="async"/></div></div><p className="donation-scan-label">Scan this QR code with your UPI app</p></aside></section></div>
+  async function copyPaymentId() {
+    try {
+      await navigator.clipboard.writeText(upiId)
+      setCopied(true)
+      toast('UPI payment ID copied.')
+      window.setTimeout(() => setCopied(false), 2200)
+    } catch {
+      toast('Could not copy the UPI ID. Please scan the QR code instead.')
+    }
+  }
+  function openSpecificApp(event) {
+    if (!/Android/i.test(navigator.userAgent)) {
+      event.preventDefault()
+      toast('PhonePe and Paytm direct buttons work on Android. Use the QR code or any UPI app option here.')
+    }
+  }
+  return <div className="donation-page"><PageTitle eyebrow="SUPPORT QUIZFORGE" title="Help keep learning simple." description="QuizForge is free to use. If it helps your practice, an optional donation supports its maintenance and future improvements." action={<a className="btn btn-primary" href={primaryPaymentLink} onClick={openPayment}><Heart size={16} fill="currentColor"/> Pay with UPI</a>}/><section className="donation-layout"><section className="donation-copy"><div className="donation-intro"><div className="donation-icon"><Heart size={22} fill="currentColor"/></div><div><h2>Support the project</h2><p>Every contribution helps keep QuizForge lightweight, privacy-first, and useful for learners.</p></div></div><div className="donation-points"><div><b>Free and local-first</b><span>No subscription or account is required to practice.</span></div><div><b>Small contributions matter</b><span>Your support helps with hosting, maintenance, and improvements.</span></div><div><b>Use any UPI app</b><span>Open the Android UPI chooser, use Google Pay, PhonePe, or Paytm.</span></div></div><div className="donation-actions"><a className="btn btn-primary pay-now-button" href={primaryPaymentLink} onClick={openPayment}><Heart size={16} fill="currentColor"/> Pay with any UPI app</a><a className="btn btn-secondary" href={googlePayLink} onClick={openPayment}>Open Google Pay</a><button className="btn btn-secondary" type="button" onClick={copyPaymentId}><Copy size={15}/> {copied ? 'Copied' : 'Copy payment ID'}</button></div><div className="donation-app-options"><span className="donation-app-label">Open directly in</span><a className="payment-app-button phonepe" href={phonePeLink} onClick={openSpecificApp}><img src={`${import.meta.env.BASE_URL}phonepe.svg`} alt=""/> PhonePe</a><a className="payment-app-button paytm" href={paytmLink} onClick={openSpecificApp}><img src={`${import.meta.env.BASE_URL}paytm.svg`} alt=""/> Paytm</a></div><p className="donation-note">On Android, the first button opens the standard UPI app chooser. If your browser asks to open a payment app, approve that handoff. Direct app buttons require the app to be installed. On desktop, scan the QR code.</p></section><aside className="panel donation-card"><div className="donation-card-head"><div><h3>Scan &amp; pay</h3><p>Use Google Pay, Paytm, PhonePe, or another UPI app.</p></div><span className="donation-badge"><Heart size={13} fill="currentColor"/></span></div><div className="donation-qr-wrap"><div className="donation-qr-crop"><img src={`${import.meta.env.BASE_URL}donation-qr.png`} alt="UPI QR code for supporting QuizForge" loading="lazy" decoding="async"/></div></div><p className="donation-scan-label">Scan this QR code with your UPI app</p></aside></section></div>
 }
 
 function NotFoundPage({navigate}) {

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Paytm">
+  <rect width="64" height="64" rx="16" fill="#00a9e0"/>
+  <path d="M13 22h38v7H39v18h-9V29H13z" fill="#fff"/>
+  <path d="M14 40h8v7h-8zm29 0h8v7h-8z" fill="#bdefff"/>
+</svg>
