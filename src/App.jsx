@@ -10,10 +10,41 @@ import './loader.css'
 import './donation.css'
 import './question-metadata.css'
 import './ai-generator.css'
+import './sample-import.css'
 
 const fmt = n => `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`
 const uid = () => crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`
 const bookletGroups = (settings, banks) => [...new Set(['General', ...(settings?.questionBookletGroups || []), ...banks.map(booklet => booklet.group || 'General')].map(group => group.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b))
+const sampleBooklets = [
+  {
+    id: 'jee-main',
+    title: 'JEE Main Aspirants',
+    description: 'Physics, Chemistry, and Mathematics practice.',
+    name: 'JEE Main Sample Question Booklet',
+    url: 'https://docs.google.com/spreadsheets/d/1F0VmbXZs4_9_NuU2tEtqAM5iUf_uPsZR/edit?usp=sharing',
+  },
+  {
+    id: 'neet',
+    title: 'NEET Aspirants',
+    description: 'Biology, Physics, and Chemistry practice.',
+    name: 'NEET Sample Question Booklet',
+    url: 'https://docs.google.com/spreadsheets/d/1l6lTP3IN_fy69XkodbzLPi_UN64Our-1/edit?usp=sharing',
+  },
+  {
+    id: 'reet',
+    title: 'REET Aspirants',
+    description: 'Teacher eligibility and Rajasthan exam practice.',
+    name: 'REET Sample Question Booklet',
+    url: 'https://docs.google.com/spreadsheets/d/1y1ma6ehphzq2MVjZYffSU0B-byv0JqID/edit?usp=sharing',
+  },
+  {
+    id: 'rpsc-ia-programmer',
+    title: 'RPSC IA & Programmer',
+    description: 'Information assistant and programmer practice.',
+    name: 'RPSC IA and Programmer Sample Question Booklet',
+    url: 'https://docs.google.com/spreadsheets/d/1rBBq-FnvXSnuhzLvthQERWQydYdyVDcP/edit?usp=sharing',
+  },
+]
 
 function Logo({withText = false, className = ''}) {
   return <div className={`quizforge-logo ${withText ? 'quizforge-logo-with-text' : ''} ${className}`.trim()}>
@@ -351,6 +382,7 @@ function BankRow({bank,onClick}) { return <button className="bank-row" onClick={
 function ImportPage({addBank,toast,settings,updateSettings,banks}) {
   const [url,setUrl] = useState('')
   const [name,setName] = useState('')
+  const [importSource,setImportSource] = useState('')
   const [group,setGroup] = useState('General')
   const [newGroup,setNewGroup] = useState('')
   const [creatingGroup,setCreatingGroup] = useState(false)
@@ -369,21 +401,32 @@ function ImportPage({addBank,toast,settings,updateSettings,banks}) {
     setCreatingGroup(false)
     toast(`Group “${value}” created.`)
   }
-  async function handleImport(e) {
-    e.preventDefault(); setBusy(true); setError(''); setPreview(null)
+  async function importFrom(sourceUrl, defaultName) {
+    const source = sourceUrl.trim()
+    if (!source) return setError('Paste a Google Sheets URL before importing.')
+    setBusy(true); setError(''); setPreview(null); setUrl(source); setImportSource(source)
     try {
-      const questions = await importSheet(url)
+      const questions = await importSheet(source)
       setPreview(questions)
-      if (!name.trim()) setName('My question booklet')
-    } catch (err) { setError(err.message) } finally { setBusy(false) }
+      if (!name.trim()) setName(defaultName)
+    } catch (err) { setError(err.message || 'Could not import this question booklet.') } finally { setBusy(false) }
+  }
+  async function handleImport(e) {
+    e.preventDefault()
+    await importFrom(url, name.trim() || 'My question booklet')
+  }
+  async function importSample(sample) {
+    setName(sample.name)
+    await importFrom(sample.url, sample.name)
   }
   async function save() {
     const subjects = [...new Set(preview.map(q => q.subject))]
-    await addBank({id:uid(),name:name.trim() || 'My question booklet',group:group.trim() || 'General',sourceUrl:url.trim(),createdAt:new Date().toISOString(),subjects,questions:preview})
+    await addBank({id:uid(),name:name.trim() || 'My question booklet',group:group.trim() || 'General',sourceUrl:importSource || url.trim(),createdAt:new Date().toISOString(),subjects,questions:preview})
   }
   return <><PageTitle eyebrow="QUESTION BOOKLETS" title="Add a question booklet." description="Import a Google Sheet as a question booklet inside your combined question bank."/>
-    <div className="import-layout"><section className="panel import-panel"><div className="step-label"><span>01</span> CONNECT YOUR QUESTION BOOKLET</div><h2>Paste your Google Sheets link</h2><p className="muted-text">QuizForge reads a view-only copy and saves the questions locally in this browser. You do not need to publish the sheet to the web.</p><form onSubmit={handleImport}><label>Google Sheets URL</label><div className="input-with-icon"><FileSpreadsheet size={18}/><input required type="url" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://docs.google.com/spreadsheets/d/..."/></div><label>Give this question booklet a name <span className="optional">(optional)</span></label><input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Java Collections Booklet"/><label>Save booklet in a group</label><div className="group-input-row"><select value={group} onChange={e => setGroup(e.target.value)}><option value="General">General</option>{groups.filter(item => item !== 'General').map(item => <option key={item} value={item}>{item}</option>)}</select><button type="button" className="btn btn-secondary btn-small" onClick={() => setCreatingGroup(value => !value)}>Make a group</button></div>{creatingGroup && <div className="create-group-row"><input autoFocus value={newGroup} onChange={e => setNewGroup(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); createGroup() } }} placeholder="New group name"/><button type="button" className="btn btn-primary btn-small" onClick={createGroup}>Create</button></div>}<button className="btn btn-primary full-btn" disabled={busy}>{busy ? 'Reading spreadsheet…' : <><Upload size={16}/> Import booklet and preview</>}</button></form>{error && <div className="error-box"><CircleHelp size={17}/>{error}</div>}</section>
+    <div className="import-layout"><section className="panel import-panel"><div className="step-label"><span>01</span> CONNECT YOUR QUESTION BOOKLET</div><h2>Paste your Google Sheets link</h2><p className="muted-text">QuizForge reads a view-only copy and saves the questions locally in this browser. You do not need to publish the sheet to the web.</p><form onSubmit={handleImport}><label>Google Sheets URL</label><div className="input-with-icon"><FileSpreadsheet size={18}/><input required type="url" value={url} onChange={e => { setUrl(e.target.value); setImportSource('') }} placeholder="https://docs.google.com/spreadsheets/d/..."/></div><label>Give this question booklet a name <span className="optional">(optional)</span></label><input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Java Collections Booklet"/><label>Save booklet in a group</label><div className="group-input-row"><select value={group} onChange={e=>setGroup(e.target.value)}><option value="General">General</option>{groups.filter(item => item !== 'General').map(item => <option key={item} value={item}>{item}</option>)}</select><button type="button" className="btn btn-secondary btn-small" onClick={() => setCreatingGroup(value => !value)}>Make a group</button></div>{creatingGroup && <div className="create-group-row"><input autoFocus value={newGroup} onChange={e => setNewGroup(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); createGroup() } }} placeholder="New group name"/><button type="button" className="btn btn-primary btn-small" onClick={createGroup}>Create</button></div>}<button className="btn btn-primary full-btn" disabled={busy}>{busy ? 'Reading spreadsheet…' : <><Upload size={16}/> Import booklet and preview</>}</button></form>{error && <div className="error-box"><CircleHelp size={17}/>{error}</div>}</section>
       <aside className="panel help-panel"><div className="help-icon"><FileSpreadsheet size={22}/></div><h3>Before you import</h3><ol><li>Open your Google Sheet and click <b>Share</b>.</li><li>Under General access, choose <b>Anyone with the link</b>.</li><li>Set the role to <b>Viewer</b>.</li><li>Copy the share link and paste it here.</li></ol><div className="info-box">Use headers such as <b>SN, Question, Option A-D, Answer, Difficulty Level, Subtopic, Speciality</b>. QuizForge labels the subject as Question Booklet and keeps Subtopic and Speciality as question metadata.</div><a href="https://support.google.com/docs/answer/2494822" target="_blank" rel="noreferrer">Google Sheets sharing help ↗</a></aside></div>
+    <section className="panel sample-import-panel"><div className="panel-head"><div><h3>Try a sample question booklet</h3><p>Choose an exam and import its public, view-only Google Sheet directly.</p></div><span className="sample-count">{sampleBooklets.length} samples</span></div><div className="sample-import-grid">{sampleBooklets.map(sample => <article className="sample-import-card" key={sample.id}><div className="sample-import-icon"><FileSpreadsheet size={18}/></div><div className="sample-import-copy"><h4>{sample.title}</h4><p>{sample.description}</p><small>Saved as “{sample.name}”</small></div><div className="sample-import-actions"><button type="button" className="btn btn-primary btn-small" onClick={() => importSample(sample)} disabled={busy}><Upload size={14}/> {busy ? 'Importing…' : 'Import sample'}</button><button type="button" className="text-btn" onClick={() => { setUrl(sample.url); setName(sample.name); setImportSource(''); setError(''); setPreview(null) }}>Use link</button></div></article>)}</div><p className="sample-import-note">Samples remain in Google Sheets. QuizForge reads them as Viewer and stores your imported copy only in this browser.</p></section>
     {preview && <section className="panel preview-panel"><div className="panel-head"><div><h3>Question booklet preview</h3><p>{preview.length} valid questions found. Check a few before saving.</p></div><span className="success-pill"><CheckCircle2 size={14}/> Ready to save</span></div><div className="preview-list">{preview.slice(0,4).map((q,i)=><div className="preview-question" key={q.id+i}><b>{i+1}. {q.question}</b><small>{q.topic} · {q.speciality || 'Not specified'} · {formatDifficulty(q.difficulty)} · Answer: {q.correctAnswer}</small></div>)}</div><button className="btn btn-primary" onClick={save}>Save question booklet <ArrowRight size={16}/></button></section>}
   </>
 }

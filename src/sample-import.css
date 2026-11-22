@@ -1,0 +1,12 @@
+.sample-import-panel{margin-top:17px}
+.sample-count{font-size:9px;color:var(--primary);background:var(--soft);padding:6px 9px;border-radius:20px;font-weight:700;white-space:nowrap}
+.sample-import-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.sample-import-card{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start;border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--surface2)}
+.sample-import-icon{width:34px;height:34px;border-radius:9px;background:var(--soft);color:var(--primary);display:grid;place-items:center}
+.sample-import-copy{min-width:0}
+.sample-import-copy h4{font:700 12px/1.35 Manrope;margin:0;color:var(--text)}
+.sample-import-copy p{font-size:10px;line-height:1.5;color:var(--muted);margin:4px 0}
+.sample-import-copy small{font-size:9px;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sample-import-actions{grid-column:1/-1;display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:10px;margin-top:2px}
+.sample-import-note{font-size:10px;line-height:1.6;color:var(--muted);margin:14px 0 0}
+@media(max-width:760px){.sample-import-grid{grid-template-columns:1fr}}

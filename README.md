@@ -103,6 +103,17 @@ npm run preview
 
 Publishing the Sheet to the web is not required. A private Sheet that requires sign-in cannot be read by the static browser app.
 
+## Sample question booklets
+
+The **Import questions** screen includes one-click sample imports for these public, view-only sheets:
+
+- [JEE Main Aspirants](https://docs.google.com/spreadsheets/d/1F0VmbXZs4_9_NuU2tEtqAM5iUf_uPsZR/edit?usp=sharing)
+- [NEET Aspirants](https://docs.google.com/spreadsheets/d/1l6lTP3IN_fy69XkodbzLPi_UN64Our-1/edit?usp=sharing)
+- [REET Aspirants](https://docs.google.com/spreadsheets/d/1y1ma6ehphzq2MVjZYffSU0B-byv0JqID/edit?usp=sharing)
+- [RPSC IA and Programmer Aspirants](https://docs.google.com/spreadsheets/d/1rBBq-FnvXSnuhzLvthQERWQydYdyVDcP/edit?usp=sharing)
+
+Choose **Import sample** to read and preview a sheet immediately, or choose **Use link** to populate the normal importer and edit the booklet name or group first. The imported copy is still stored locally in the user’s browser.
+
 ## AI question generator
 
 Open **AI question generator** in QuizForge to customize the NTA JEE Main prompt:
@@ -150,7 +161,8 @@ src/
 ├── db.js                   # IndexedDB and LocalStorage persistence
 ├── styles.css              # Core responsive design system
 ├── ai-generator.css        # AI prompt builder styling
-└── question-metadata.css   # Speciality and question metadata styling
+├── question-metadata.css   # Speciality and question metadata styling
+└── sample-import.css       # Sample booklet import cards
 public/
 ├── favicon.svg             # Shared QuizForge logo
 └── donation-qr.png         # Donation QR visual
