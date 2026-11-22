@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">QuizForge workflow</title>
+  <desc id="desc">Import a Google Sheet, organize question booklets, choose a test scope, practice, review answers, and export analytics.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111526"/>
+      <stop offset="1" stop-color="#202542"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7773ff"/>
+      <stop offset="1" stop-color="#9b8cff"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#050711" flood-opacity=".32"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#9b8cff"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="420" rx="24" fill="url(#bg)"/>
+  <circle cx="1080" cy="-20" r="180" fill="#7773ff" opacity=".08"/>
+  <circle cx="80" cy="430" r="150" fill="#2ea86b" opacity=".07"/>
+
+  <text x="60" y="58" fill="#ffffff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25" font-weight="700">From question bank to useful insight</text>
+  <text x="60" y="88" fill="#b8c1e2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15">A local-first workflow for focused practice and detailed review.</text>
+
+  <g stroke="#9b8cff" stroke-width="3" fill="none" marker-end="url(#arrow)">
+    <path d="M215 223H258"/>
+    <path d="M445 223H488"/>
+    <path d="M675 223H718"/>
+    <path d="M905 223H948"/>
+  </g>
+
+  <g filter="url(#shadow)" font-family="Inter,Segoe UI,Arial,sans-serif">
+    <g transform="translate(45 138)">
+      <rect width="170" height="170" rx="18" fill="#eaf3ff"/>
+      <circle cx="34" cy="36" r="20" fill="#5794dc"/>
+      <text x="34" y="43" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">1</text>
+      <text x="22" y="88" fill="#20243a" font-size="18" font-weight="700">Import</text>
+      <text x="22" y="116" fill="#4d5879" font-size="14">Google Sheet</text>
+      <text x="22" y="138" fill="#4d5879" font-size="14">question booklet</text>
+    </g>
+
+    <g transform="translate(275 138)">
+      <rect width="170" height="170" rx="18" fill="#f2efff"/>
+      <circle cx="34" cy="36" r="20" fill="#7773ff"/>
+      <text x="34" y="43" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">2</text>
+      <text x="22" y="88" fill="#20243a" font-size="18" font-weight="700">Organize</text>
+      <text x="22" y="116" fill="#4d5879" font-size="14">Group booklets</text>
+      <text x="22" y="138" fill="#4d5879" font-size="14">into a question bank</text>
+    </g>
+
+    <g transform="translate(505 138)">
+      <rect width="170" height="170" rx="18" fill="#fff5e8"/>
+      <circle cx="34" cy="36" r="20" fill="#e39a42"/>
+      <text x="34" y="43" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">3</text>
+      <text x="22" y="88" fill="#20243a" font-size="18" font-weight="700">Choose</text>
+      <text x="22" y="116" fill="#4d5879" font-size="14">One booklet or</text>
+      <text x="22" y="138" fill="#4d5879" font-size="14">the whole bank</text>
+    </g>
+
+    <g transform="translate(735 138)">
+      <rect width="170" height="170" rx="18" fill="#eeeeff"/>
+      <circle cx="34" cy="36" r="20" fill="#5555d9"/>
+      <text x="34" y="43" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">4</text>
+      <text x="22" y="88" fill="#20243a" font-size="18" font-weight="700">Practice</text>
+      <text x="22" y="116" fill="#4d5879" font-size="14">Randomized test</text>
+      <text x="22" y="138" fill="#4d5879" font-size="14">with A–D options</text>
+    </g>
+
+    <g transform="translate(965 138)">
+      <rect width="190" height="170" rx="18" fill="#e8f7ef"/>
+      <circle cx="34" cy="36" r="20" fill="#2ea86b"/>
+      <text x="34" y="43" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">5</text>
+      <text x="22" y="88" fill="#20243a" font-size="18" font-weight="700">Understand</text>
+      <text x="22" y="116" fill="#4d5879" font-size="14">Review answers</text>
+      <text x="22" y="138" fill="#4d5879" font-size="14">and export analytics</text>
+    </g>
+  </g>
+
+  <rect x="60" y="352" width="1080" height="1" fill="#505a7d" opacity=".65"/>
+  <text x="60" y="385" fill="#b8c1e2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14">Local-first</text>
+  <text x="160" y="385" fill="#7884ae" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14">No account required</text>
+  <text x="430" y="385" fill="#b8c1e2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14">Responsive</text>
+  <text x="520" y="385" fill="#7884ae" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14">Phones, tablets, desktop</text>
+  <text x="845" y="385" fill="#b8c1e2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14">Exportable</text>
+  <text x="935" y="385" fill="#7884ae" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14">PDF reports and backups</text>
+</svg>

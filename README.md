@@ -14,21 +14,9 @@
 
 QuizForge is a privacy-first, browser-based quiz workspace for learners, teachers, tutors, exam aspirants, and training teams. Bring the question bank you already maintain in Google Sheets, save each imported tab as a **Question Booklet**, combine booklets into a **Question Bank**, and turn them into useful practice sessions.
 
-```mermaid
-flowchart LR
-    A[Google Sheet<br/>Question Booklet] --> B[Import & preview]
-    B --> C[Group booklets<br/>locally]
-    C --> D{Choose scope}
-    D --> E[One booklet]
-    D --> F[Whole question bank]
-    E --> G[Randomized test]
-    F --> G
-    G --> H[Answer review]
-    H --> I[Analytics & PDF report]
-    style A fill:#eaf3ff,stroke:#5794dc,color:#20243a
-    style G fill:#eeeeff,stroke:#5555d9,color:#20243a
-    style I fill:#e8f7ef,stroke:#2ea86b,color:#20243a
-```
+<p align="center">
+  <img src="public/readme-workflow.svg" alt="QuizForge workflow: import, organize, choose, practice, and understand" width="100%" />
+</p>
 
 ## Repository highlights
 
