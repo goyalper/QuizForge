@@ -24,6 +24,7 @@ jobs:
         env:
           NPM_CONFIG_AUDIT: 'false'
           NPM_CONFIG_FUND: 'false'
+      - run: npm test
       - run: npm run build
         env:
           VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}

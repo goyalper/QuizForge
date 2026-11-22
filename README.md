@@ -86,9 +86,12 @@ npm run dev
 Open the local URL shown by Vite. To create a production build:
 
 ```bash
+npm test
 npm run build
 npm run preview
 ```
+
+`npm test` runs the core import, validation, shuffling, scoring, difficulty, and analytics checks. Pull requests and pushes to `main` run the same tests automatically through `.github/workflows/test.yml`; the Pages deployment workflow also builds the application before publishing it.
 
 ## Import a booklet
 
@@ -152,14 +155,17 @@ public/
 ├── favicon.svg             # Shared QuizForge logo
 └── donation-qr.png         # Donation QR visual
 .github/workflows/
+├── test.yml                # Core tests and production-build checks
 └── deploy.yml              # GitHub Pages build and deployment
+tests/
+└── core.test.mjs           # Import, quiz, scoring, and analytics tests
 ```
 
 ## Contributing
 
 1. Fork the repository.
 2. Create a focused feature branch.
-3. Run `npm run build` before opening a pull request.
+3. Run `npm test` and `npm run build` before opening a pull request.
 4. Explain the user problem, implementation, and verification steps.
 
 ## License
