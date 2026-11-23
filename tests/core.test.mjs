@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import { questionsFromRows, toCsvUrl } from '../src/sheets.js'
-import { buildTest, evaluate, formatDifficulty, summarizeBy } from '../src/quiz.js'
+import { buildTest, evaluate, formatDifficulty, getMarksSummary, questionHistoryKey, summarizeBy } from '../src/quiz.js'
 
 const jeeRow = (overrides = {}) => ({
   sn: '121',
@@ -67,6 +67,33 @@ test('keeps visible answer labels A-D when options are shuffled', () => {
   }
 })
 
+test('prioritizes unseen questions and only repeats after the fresh pool is exhausted', () => {
+  const questions = ['q1', 'q2', 'q3'].map(id => ({
+    id,
+    bookletId: 'physics',
+    question: id,
+    options: ['One', 'Two', 'Three', 'Four'],
+    correctAnswer: 'A',
+  }))
+  const previousKey = questionHistoryKey(questions[0])
+
+  const freshTest = buildTest(questions, {
+    count: 2,
+    shuffleQuestions: false,
+    shuffleOptions: false,
+    excludeQuestionKeys: [previousKey],
+  })
+  assert.deepEqual(freshTest.map(question => question.id), ['q2', 'q3'])
+
+  const exhaustedTest = buildTest(questions, {
+    count: 3,
+    shuffleQuestions: false,
+    shuffleOptions: false,
+    excludeQuestionKeys: [previousKey],
+  })
+  assert.deepEqual(exhaustedTest.map(question => question.id), ['q2', 'q3', 'q1'])
+})
+
 test('evaluates correct, incorrect, and skipped answers consistently', () => {
   const testQuestions = [
     { id: 'q1', correctAnswer: 'A', marks: 2, negativeMarks: 0.5 },
@@ -81,6 +108,26 @@ test('evaluates correct, incorrect, and skipped answers consistently', () => {
   assert.equal(result.score, 1.5)
   assert.equal(result.accuracy, 33)
   assert.equal(result.timeSeconds, 12)
+})
+
+test('summarizes earned marks, negative marks, and skipped potential', () => {
+  const summary = getMarksSummary({ review: [
+    { isCorrect: true, selectedAnswer: 'A', marks: 2, negativeMarks: 0.5 },
+    { isCorrect: false, selectedAnswer: 'D', marks: 3, negativeMarks: 1 },
+    { isCorrect: false, selectedAnswer: null, marks: 4, negativeMarks: 1 },
+  ] })
+
+  assert.deepEqual(summary, {
+    maximumMarks: 9,
+    marksEarned: 2,
+    negativeMarks: 1,
+    netScore: 1,
+    skippedPotential: 4,
+    attempted: 2,
+    correct: 1,
+    incorrect: 1,
+    skipped: 1,
+  })
 })
 
 test('uses distinct difficulty vocabulary and groups analytics', () => {

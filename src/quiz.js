@@ -21,13 +21,28 @@ export function formatDifficulty(value) {
   return match ? difficultyLabels[match[1]] : raw || 'Not specified'
 }
 
+export function questionHistoryKey(question) {
+  const bookletId = String(question?.bookletId || '')
+  const rawId = String(question?.sourceQuestionId ?? question?.id ?? '')
+  const sourceId = bookletId && rawId.startsWith(`${bookletId}:`) ? rawId.slice(bookletId.length + 1) : rawId
+  return bookletId ? `${bookletId}:${sourceId}` : sourceId
+}
+
 export function buildTest(questions, config) {
   const selected = questions.filter(q =>
     (!config.subject || q.subject === config.subject) &&
     (!config.topics?.length || config.topics.includes(q.topic)) &&
     (!config.difficulty || config.difficulty === 'All' || (q.difficulty || 'Not specified').toLowerCase() === config.difficulty.toLowerCase())
   )
-  const ordered = config.shuffleQuestions === false ? selected : shuffle(selected)
+  const excludedQuestionKeys = new Set(config.excludeQuestionKeys || [])
+  const fresh = selected.filter(question => !excludedQuestionKeys.has(questionHistoryKey(question)))
+  const previouslyPractised = selected.filter(question => excludedQuestionKeys.has(questionHistoryKey(question)))
+  const ordered = config.avoidPreviousQuestions === false
+    ? (config.shuffleQuestions === false ? selected : shuffle(selected))
+    : [
+      ...(config.shuffleQuestions === false ? fresh : shuffle(fresh)),
+      ...(config.shuffleQuestions === false ? previouslyPractised : shuffle(previouslyPractised)),
+    ]
   const picked = ordered.slice(0, Math.min(config.count, selected.length))
   return picked.map(q => {
     const originalOptions = q.options.map((text, index) => ({ sourceKey: String.fromCharCode(65 + index), text }))
@@ -75,10 +90,34 @@ export function summarizeBy(review, field) {
     .sort((a, b) => b.total - a.total || a.label.localeCompare(b.label))
 }
 
+export function getMarksSummary(result) {
+  const review = Array.isArray(result?.review) ? result.review : []
+  const marksFor = question => Number.isFinite(Number(question?.marks)) ? Number(question.marks) : 1
+  const negativeFor = question => Number.isFinite(Number(question?.negativeMarks)) ? Number(question.negativeMarks) : 0
+  const maximumMarks = review.reduce((total, question) => total + marksFor(question), 0)
+  const marksEarned = review.filter(question => question.isCorrect).reduce((total, question) => total + marksFor(question), 0)
+  const negativeMarks = review.filter(question => question.selectedAnswer && !question.isCorrect).reduce((total, question) => total + negativeFor(question), 0)
+  const skippedPotential = review.filter(question => !question.selectedAnswer).reduce((total, question) => total + marksFor(question), 0)
+  return {
+    maximumMarks,
+    marksEarned,
+    negativeMarks,
+    netScore: Number((marksEarned - negativeMarks).toFixed(2)),
+    skippedPotential,
+    attempted: review.filter(question => question.selectedAnswer).length,
+    correct: review.filter(question => question.isCorrect).length,
+    incorrect: review.filter(question => question.selectedAnswer && !question.isCorrect).length,
+    skipped: review.filter(question => !question.selectedAnswer).length,
+  }
+}
+
 export function getAnalytics(result) {
   const review = Array.isArray(result?.review) ? result.review : []
+  const topics = summarizeBy(review, 'topic')
+  // Keep the result-level score data beside the topic rows that already render on the results screen.
+  topics.marksSummary = getMarksSummary(result)
   return {
-    topics: summarizeBy(review, 'topic'),
+    topics,
     difficulties: summarizeBy(review, 'difficulty'),
   }
 }
