@@ -28,6 +28,24 @@ export function questionHistoryKey(question) {
   return bookletId ? `${bookletId}:${sourceId}` : sourceId
 }
 
+export function detailedSolutionSearchUrl(question) {
+  const questionText = String(question?.question || '').trim()
+  const answerKey = String(question?.correctAnswer || '').trim().toUpperCase()
+  const options = Array.isArray(question?.options) ? question.options : []
+  const answerOption = options.find((option, index) => {
+    const key = typeof option === 'object' ? option.key : String.fromCharCode(65 + index)
+    return key === answerKey
+  })
+  const answerText = typeof answerOption === 'object' ? answerOption.text : answerOption
+  const query = [
+    questionText,
+    answerKey ? `correct answer ${answerKey}${answerText ? ` ${answerText}` : ''}` : '',
+    question?.topic || '',
+    'detailed solution explanation',
+  ].filter(Boolean).join(' ')
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`
+}
+
 export function buildTest(questions, config) {
   const selected = questions.filter(q =>
     (!config.subject || q.subject === config.subject) &&

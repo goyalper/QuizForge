@@ -1,5 +1,5 @@
 import { jsPDF } from 'jspdf'
-import { formatDifficulty, getMarksSummary, summarizeBy } from './quiz.js'
+import { detailedSolutionSearchUrl, formatDifficulty, getMarksSummary, summarizeBy } from './quiz.js'
 
 const COLORS = {
   navy: [32, 36, 58], primary: [85, 85, 217], green: [42, 159, 112], orange: [224, 143, 66], red: [202, 80, 72],
@@ -139,7 +139,7 @@ export function createReportDocument(attempt) {
     const markImpact = question.isCorrect ? `+${formatMarks(question.marks ?? 1)} marks` : question.selectedAnswer ? `-${formatMarks(question.negativeMarks ?? 0)} marks` : '0 marks'
     const answerLine = `Your answer: ${question.selectedAnswer || 'Not attempted'}  |  Correct: ${question.correctAnswer || '-'}  |  ${question.isCorrect ? 'Correct' : question.selectedAnswer ? 'Incorrect' : 'Skipped'}  |  ${markImpact}`
     const explanationLines = question.explanation ? doc.splitTextToSize(`Explanation: ${question.explanation}`, contentWidth - 30) : []
-    const boxHeight = 18 + questionLines.length * 4.5 + 7 + 4.5 + (explanationLines.length ? explanationLines.length * 4 + 4 : 0)
+    const boxHeight = 18 + questionLines.length * 4.5 + 7 + 4.5 + 6 + (explanationLines.length ? explanationLines.length * 4 + 4 : 0)
     ensureSpace(boxHeight + 5)
     const isCorrect = Boolean(question.isCorrect); const isSkipped = !question.selectedAnswer; const statusColor = isCorrect ? COLORS.green : isSkipped ? COLORS.muted : COLORS.red; const statusBackground = isCorrect ? COLORS.paleGreen : isSkipped ? COLORS.paleGray : COLORS.paleRed
     doc.setFillColor(...COLORS.white); doc.setDrawColor(...COLORS.line); doc.roundedRect(margin, y, contentWidth, boxHeight, 4, 4, 'FD'); doc.setFillColor(...statusBackground); doc.roundedRect(margin + 6, y + 7, 14, 10, 3, 3, 'F')
@@ -147,7 +147,10 @@ export function createReportDocument(attempt) {
     doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(...COLORS.navy); doc.text(questionLines, margin + 27, y + 10, { lineHeightFactor: 1.18 })
     let contentY = y + 10 + questionLines.length * 4.5 + 4
     doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(...COLORS.muted); drawText(doc, detail, margin + 27, contentY); contentY += 5; doc.setTextColor(...COLORS.navy); drawText(doc, answerLine, margin + 27, contentY); contentY += 5
-    if (explanationLines.length) { doc.setTextColor(...COLORS.muted); doc.text(explanationLines, margin + 27, contentY, { lineHeightFactor: 1.2 }) }
+    const solutionUrl = detailedSolutionSearchUrl(question)
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(7); doc.setTextColor(...COLORS.primary); doc.textWithLink('Find detailed solution on Google', margin + 27, contentY, { url: solutionUrl })
+    contentY += 5
+    if (explanationLines.length) { doc.setFont('helvetica', 'normal'); doc.setTextColor(...COLORS.muted); doc.text(explanationLines, margin + 27, contentY, { lineHeightFactor: 1.2 }) }
     y += boxHeight + 5
   })
   drawFooter()

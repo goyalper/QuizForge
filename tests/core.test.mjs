@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import { questionsFromRows, toCsvUrl } from '../src/sheets.js'
-import { buildTest, evaluate, formatDifficulty, getMarksSummary, questionHistoryKey, summarizeBy } from '../src/quiz.js'
+import { buildTest, detailedSolutionSearchUrl, evaluate, formatDifficulty, getMarksSummary, questionHistoryKey, summarizeBy } from '../src/quiz.js'
 
 const jeeRow = (overrides = {}) => ({
   sn: '121',
@@ -92,6 +92,16 @@ test('prioritizes unseen questions and only repeats after the fresh pool is exha
     excludeQuestionKeys: [previousKey],
   })
   assert.deepEqual(exhaustedTest.map(question => question.id), ['q2', 'q3', 'q1'])
+})
+
+test('creates a focused Google detailed-solution search for each question', () => {
+  const [question] = questionsFromRows([jeeRow()])
+  const query = new URL(detailedSolutionSearchUrl(question)).searchParams.get('q')
+
+  assert.equal(new URL(detailedSolutionSearchUrl(question)).hostname, 'www.google.com')
+  assert.match(query, /potential energy/i)
+  assert.match(query, /correct answer A qV/i)
+  assert.match(query, /detailed solution explanation/i)
 })
 
 test('evaluates correct, incorrect, and skipped answers consistently', () => {
