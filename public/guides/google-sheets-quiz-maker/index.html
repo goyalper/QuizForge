@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8fc" />
+    <title>Google Sheets Quiz Maker: Build a Question Booklet | QuizForge</title>
+    <meta name="description" content="Learn how to turn a Google Sheets question bank into a randomized practice quiz with QuizForge. Use the correct columns, share a view-only link, and review local analytics." />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href="https://goyalper.github.io/QuizForge/guides/google-sheets-quiz-maker/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="QuizForge" />
+    <meta property="og:title" content="Google Sheets Quiz Maker: Build a Question Booklet" />
+    <meta property="og:description" content="A practical guide to creating a Google Sheets question booklet and turning it into a focused QuizForge practice test." />
+    <meta property="og:url" content="https://goyalper.github.io/QuizForge/guides/google-sheets-quiz-maker/" />
+    <meta name="twitter:card" content="summary" />
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"HowTo","name":"How to make a quiz from Google Sheets with QuizForge","description":"Create a question booklet in Google Sheets, share it as a view-only link, and import it into QuizForge.","totalTime":"PT10M","step":[{"@type":"HowToStep","name":"Create the header row","text":"Add SN, Question, Option A, Option B, Option C, Option D, Answer, Difficulty Level, Subtopic, and Speciality as your column headers."},{"@type":"HowToStep","name":"Add and check questions","text":"Use one question per row. Fill all four options and set Answer to A, B, C, or D."},{"@type":"HowToStep","name":"Share the sheet","text":"Set General access to Anyone with the link and Viewer, then copy the normal Google Sheets URL."},{"@type":"HowToStep","name":"Import and practice","text":"Paste the sheet URL into QuizForge, save the question booklet, choose filters and test rules, and start practicing."}]}
+    </script>
+    <style>
+      :root { color-scheme: light; --ink:#20243a; --muted:#606984; --brand:#5855d9; --soft:#f2f3ff; --line:#e2e5ef; --card:#fff; --canvas:#f7f8fc; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:var(--canvas); font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+      a { color:#4844bd; font-weight:700; }
+      .shell { width:min(960px,calc(100% - 32px)); margin:auto; }
+      header { padding:18px 0; border-bottom:1px solid var(--line); background:#fff; }
+      .brand { display:flex; align-items:center; gap:10px; color:var(--ink); text-decoration:none; font-size:20px; }
+      .brand img { width:38px; height:38px; border-radius:10px; }
+      .hero { padding:72px 0 44px; }
+      .eyebrow { color:#5c57d3; font-size:12px; font-weight:800; letter-spacing:.12em; }
+      h1 { max-width:760px; margin:10px 0 16px; font-size:clamp(36px,6vw,60px); line-height:1.05; letter-spacing:-.045em; }
+      h2 { margin-top:42px; font-size:28px; line-height:1.2; letter-spacing:-.025em; }
+      h3 { margin:0 0 8px; font-size:19px; }
+      .lead { max-width:720px; color:var(--muted); font-size:20px; }
+      .actions { display:flex; flex-wrap:wrap; gap:12px; margin:28px 0; }
+      .button { display:inline-flex; align-items:center; padding:11px 17px; border-radius:10px; background:var(--brand); color:#fff; text-decoration:none; }
+      .button.secondary { background:#fff; color:var(--ink); border:1px solid var(--line); }
+      .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:28px 0; }
+      .card, .callout { padding:22px; border:1px solid var(--line); border-radius:16px; background:var(--card); box-shadow:0 6px 20px rgba(34,38,61,.04); }
+      .card p, .callout p, li { color:var(--muted); }
+      .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:14px; background:#fff; }
+      table { width:100%; border-collapse:collapse; min-width:650px; }
+      th,td { padding:12px 14px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+      th { background:var(--soft); font-size:14px; }
+      code { border-radius:5px; padding:2px 5px; color:#403ca8; background:var(--soft); }
+      details { margin:12px 0; padding:17px 20px; border:1px solid var(--line); border-radius:12px; background:#fff; }
+      summary { cursor:pointer; font-weight:800; }
+      footer { margin-top:64px; padding:28px 0; border-top:1px solid var(--line); color:var(--muted); font-size:14px; }
+      @media (max-width:700px) { .hero { padding-top:48px; } .grid { grid-template-columns:1fr; } }
+    </style>
+  </head>
+  <body>
+    <header><div class="shell"><a class="brand" href="../../"><img src="../../favicon.svg" alt="QuizForge logo" /> <span>Quiz<span style="color:#5855d9">Forge</span></span></a></div></header>
+    <main class="shell">
+      <section class="hero">
+        <div class="eyebrow">QUIZFORGE GUIDE</div>
+        <h1>Make a focused practice quiz from a Google Sheet.</h1>
+        <p class="lead">Keep your questions in a spreadsheet, turn each tab into a reusable question booklet, then create randomized tests with filters, answer review, and local performance analytics.</p>
+        <div class="actions"><a class="button" href="../../">Open QuizForge</a><a class="button secondary" href="../../#/tutorial">See the in-app tutorial</a></div>
+      </section>
+      <section class="grid" aria-label="QuizForge benefits">
+        <article class="card"><h3>Use your own questions</h3><p>Maintain the question bank in the familiar Google Sheets format you already use.</p></article>
+        <article class="card"><h3>Practice with intent</h3><p>Choose a single booklet or the full bank, then filter by subtopic and difficulty.</p></article>
+        <article class="card"><h3>Keep results local</h3><p>Imported booklets, test attempts, and reports stay in the browser unless you export them.</p></article>
+      </section>
+      <section>
+        <h2>1. Set up the question booklet columns</h2>
+        <p>Create a Google Sheet and use the first row for column headers. Add one multiple-choice question per row. QuizForge reads the question text, four choices, the correct option, and metadata used to organize the practice session.</p>
+        <div class="table-wrap"><table><thead><tr><th>Column</th><th>What to enter</th><th>Example</th></tr></thead><tbody>
+          <tr><td><code>SN</code></td><td>A question number or identifier.</td><td>121</td></tr>
+          <tr><td><code>Question</code></td><td>The complete question text.</td><td>What is the SI unit of force?</td></tr>
+          <tr><td><code>Option A</code> through <code>Option D</code></td><td>All four answer choices.</td><td>Newton, Joule, Watt, Pascal</td></tr>
+          <tr><td><code>Answer</code></td><td>Only the correct option letter.</td><td>A</td></tr>
+          <tr><td><code>Difficulty Level</code></td><td>A level from 1 to 5, or a readable label.</td><td>2</td></tr>
+          <tr><td><code>Subtopic</code></td><td>The category used in filters and analytics.</td><td>Physics - Units and Measurements</td></tr>
+          <tr><td><code>Speciality</code></td><td>Useful source or recurrence information.</td><td>JEE Main - 2021, 2023 and 2025</td></tr>
+        </tbody></table></div>
+        <p><strong>Optional:</strong> add <code>Explanation</code>, <code>Marks</code>, and <code>Negative Marks</code> when you want richer review and scoring.</p>
+      </section>
+      <section>
+        <h2>2. Check each row before you share it</h2>
+        <p>Quality data produces a fairer practice test. Fill each option, make the answer one of <code>A</code>, <code>B</code>, <code>C</code>, or <code>D</code>, and remove rows that are not questions. Use consistent subtopic names so related questions stay together in your results.</p>
+        <div class="callout"><h3>A quick pre-import check</h3><p>Keep the headers in the first row, ensure every question has four choices, and avoid blank question rows. If answer choices are shuffled during a test, QuizForge keeps the labels in the standard A–D order for a clear answer review.</p></div>
+      </section>
+      <section>
+        <h2>3. Share a view-only Google Sheets link</h2>
+        <p>In Google Sheets, select <strong>Share</strong>, set General access to <strong>Anyone with the link</strong>, and keep the access level as <strong>Viewer</strong>. Copy the normal Google Sheets URL. You do not need to publish the spreadsheet to the web.</p>
+        <p>Only include questions you are comfortable making available to anyone who has that Sheet link. QuizForge imports the selected data into the browser where you use it.</p>
+      </section>
+      <section>
+        <h2>4. Import, personalize, and review</h2>
+        <p>Open QuizForge and choose <strong>Import questions</strong>. Paste the Google Sheets link, check the preview, give the booklet a useful name, and optionally place it in a group. When you create a test, you can choose one booklet or the entire question bank, set a question count and time limit, select subtopics and difficulty, and decide whether to shuffle questions or answer options.</p>
+        <p>After submission, review the correct answers, explore marks and accuracy by subtopic and difficulty, then download a detailed PDF report. For individual questions, the answer review can open a targeted Google search for a fuller explanation.</p>
+      </section>
+      <section>
+        <h2>Frequently asked questions</h2>
+        <details><summary>Why can’t QuizForge read my Google Sheet?</summary><p>Confirm that the Sheet is accessible to anyone with the link as a Viewer, the URL is a normal Google Sheets link, and the selected tab contains the supported header row.</p></details>
+        <details><summary>Can I combine several booklets?</summary><p>Yes. Save separate Sheets or tabs as individual question booklets, organize them into groups, then choose Whole question bank when configuring a test.</p></details>
+        <details><summary>Does QuizForge store my questions on its server?</summary><p>No account is required. QuizForge stores imported booklets and test history in the browser on the device you use, so export a backup before clearing browser data or changing devices.</p></details>
+      </section>
+      <section class="callout"><h2>Ready to practice?</h2><p>Build the Sheet once, then reuse it for focused practice tests whenever you need them.</p><a class="button" href="../../">Create a practice test</a></section>
+    </main>
+    <footer><div class="shell">QuizForge is a local-first practice workspace. <a href="../../#/about">Learn about privacy and data storage.</a></div></footer>
+  </body>
+</html>
