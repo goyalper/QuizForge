@@ -32,9 +32,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const siteUrl = (env.VITE_SITE_URL || process.env.VITE_SITE_URL || '').replace(/\/+$/, '')
   const repositoryName = (process.env.GITHUB_REPOSITORY || '').split('/')[1] || 'quizforge'
+  const configuredBase = env.VITE_BASE_PATH || process.env.VITE_BASE_PATH || (process.env.GITHUB_ACTIONS ? `/${repositoryName}/` : '/')
+  const basePath = `/${configuredBase}`.replace(/^\/+(.*)$/, '/$1').replace(/\/?$/, '/')
   return {
     plugins: [react(), seoFiles(siteUrl)],
-    // GitHub Pages project-site deployments use the repository name.
-    base: process.env.GITHUB_ACTIONS ? `/${repositoryName}/` : '/',
+    // A repository site uses /QuizForge/, while a custom domain is served from /.
+    base: basePath,
   }
 })
