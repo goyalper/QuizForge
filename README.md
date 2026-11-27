@@ -148,7 +148,7 @@ The repository includes `.github/workflows/deploy.yml`. It builds and deploys au
 3. Set the build source to **GitHub Actions**.
 4. Push to `main` or run the workflow manually from the **Actions** tab.
 
-The Vite configuration automatically uses the GitHub repository name as the project-site base path. The workflow also sets `VITE_SITE_URL` and generates `robots.txt` and `sitemap.xml` for the resulting GitHub Pages URL.
+The Vite configuration uses the repository-name base path for GitHub Pages project sites and `/` for the custom domain. The workflow sets `VITE_SITE_URL` to `https://quizforge.forgesoft.in` and generates `robots.txt` and `sitemap.xml` for that domain.
 
 ## Project structure
 

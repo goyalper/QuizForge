@@ -32,9 +32,10 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const siteUrl = (env.VITE_SITE_URL || process.env.VITE_SITE_URL || '').replace(/\/+$/, '')
   const repositoryName = (process.env.GITHUB_REPOSITORY || '').split('/')[1] || 'quizforge'
+  const isGitHubPagesUrl = siteUrl && new URL(siteUrl).hostname.endsWith('.github.io')
   return {
     plugins: [react(), seoFiles(siteUrl)],
-    // GitHub Pages project-site deployments use the repository name.
-    base: process.env.GITHUB_ACTIONS ? `/${repositoryName}/` : '/',
+    // Project sites need the repository path; custom domains are served from root.
+    base: process.env.GITHUB_ACTIONS && (!siteUrl || isGitHubPagesUrl) ? `/${repositoryName}/` : '/',
   }
 })
